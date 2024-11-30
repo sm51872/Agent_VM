@@ -1,0 +1,18 @@
+# Define the path for the test file
+$testFilePath = "C:/Shebah/notebook.json"
+$BucketName = "test-bucket-shebah"
+$FileKey = "notebook.json"
+
+# Create the directory if it doesn't exist
+if (-Not (Test-Path -Path "C:/Shebah")) {
+    New-Item -Path "C:/Shebah" -ItemType Directory
+}
+
+# Create a test file to indicate that the user data script has run
+New-Item -Path $testFilePath -ItemType File -Force
+
+Copy-S3Object -BucketName $BucketName -Key $FileKey -File $testFilePath
+
+# Write a message to the test file
+"User data script executed successfully on $(Get-Date)" | Out-File -FilePath $testFilePath
+# End of script
