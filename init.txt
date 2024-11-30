@@ -1,0 +1,12 @@
+<powershell>
+# Define the S3 bucket name and the file key
+$BucketName = "test-bucket-shebah"
+$FileKey = "notebook.json"
+$destinationPath = "C:/Users/Administrator/Downloads/notebook.json"
+
+# Download the file from S3 to the local destination
+Copy-S3Object -BucketName $BucketName -Key $FileKey -File $destinationPath
+
+Write-Host "File downloaded from S3 and saved to $destinationPath"
+</powershell>
+<persist>true</persist>
