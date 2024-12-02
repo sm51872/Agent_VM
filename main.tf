@@ -13,7 +13,12 @@ provider "aws" {
   region  = "eu-west-2"
 }
 
-// create IAM role and associate policies
+data "aws_caller_identity" "current" {}
+
+variable "bucket_name" {
+  default = "test-bucket-shebah"
+  description = "Name of the S3 bucket"
+}
 
 // EC2 IAM role
 resource "aws_iam_role" "assume_role_ops" {
@@ -57,7 +62,7 @@ data "aws_iam_policy_document" "policy_doc" {
     ]
 
     resources = [
-      "arn:aws:ec2:ec2:eu-west-2:955288011248:instance/${aws_instance.windows_vm.id}",
+      "arn:aws:ec2:ec2:eu-west-2:${data.aws_caller_identity.current.account_id}:instance/${aws_instance.windows_vm.id}",
     ]
   }
   
@@ -68,7 +73,7 @@ data "aws_iam_policy_document" "policy_doc" {
     ]
 
     resources = [
-      "arn:aws:s3:::test-bucket-shebah",
+      "arn:aws:s3:::${var.bucket_name}",
     ]
   }
 }
