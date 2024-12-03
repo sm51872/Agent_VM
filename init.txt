@@ -4,8 +4,15 @@ $BucketName = "test-bucket-shebah"
 $FileKey = "notebook.json"
 $destinationPath = "C:/Users/Administrator/Downloads/notebook.json"
 
+Invoke-WebRequest -Uri "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile AWSCLIV2.msi
+
+Start-Process -Wait -FilePath msiexec.exe -ArgumentList '/i ./AWSCLIV2.msi /qn'
+
 # Download the file from S3 to the local destination
 Copy-S3Object -BucketName $BucketName -Key $FileKey -File $destinationPath
+
+Copy-S3Object -BucketName "test-bucket-shebah" -Key "notebook.json" -File "C:/Users/Administrator/Downloads/notebook.json"
+
 
 Write-Host "File downloaded from S3 and saved to $destinationPath"
 </powershell>

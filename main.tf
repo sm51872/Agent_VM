@@ -143,25 +143,21 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
 
 resource "aws_instance" "windows_vm" {
   ami               = "ami-03275bb9c959be973"
-  instance_type     = "t3.nano"
+  instance_type     = "t3.micro"
   key_name               = aws_key_pair.key_pair.key_name
   vpc_security_group_ids = [aws_security_group.sg_ec2.id]
   iam_instance_profile   = aws_iam_instance_profile.dev_resources_iam_profile.name
   user_data       = <<-EOF
                         <powershell>
-                        # Define the path for the test file
-                        $testFilePath = "C:/Shebah/user_data_test.txt"
+                        # Define the S3 bucket name and the file key
                         
-                        # Create the directory if it doesn't exist
-                        if (-Not (Test-Path -Path "C:/Shebah")) {
-                            New-Item -Path "C:/Shebah" -ItemType Directory
-                        }
+                        Invoke-WebRequest -Uri "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile AWSCLIV2.msi
                         
-                        # Create a test file to indicate that the user data script has run
-                        New-Item -Path $testFilePath -ItemType File -Force
+                        Start-Process -FilePath "./AWSCLIV2.msi"
                         
-                        # Write a message to the test file
-                        "User data script executed successfully on $(Get-Date)" | Out-File -FilePath $testFilePath
+                        Copy-S3Object -BucketName "test-bucket-shebah" -Key "notebook.json" -File "C:/Users/Administrator/Downloads/notebook.json"
+                        
+                        Write-Host "File downloaded from S3 and saved to $destinationPath"
                         </powershell>
                         <persist>true</persist>
                         EOF
