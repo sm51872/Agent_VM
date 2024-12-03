@@ -149,15 +149,13 @@ resource "aws_instance" "windows_vm" {
   iam_instance_profile   = aws_iam_instance_profile.dev_resources_iam_profile.name
   user_data       = <<-EOF
                         <powershell>
-                        # Define the S3 bucket name and the file key
-                        
                         Invoke-WebRequest -Uri "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile AWSCLIV2.msi
                         
                         Start-Process -FilePath "./AWSCLIV2.msi"
                         
-                        Copy-S3Object -BucketName "test-bucket-shebah" -Key "notebook.json" -File "C:/Users/Administrator/Downloads/notebook.json"
+                        Copy-S3Object -BucketName "hbc-ops" -Key "dacupd.lsstg-2.22.19745.exe" -File "C:/Users/Administrator/dacupd.lsstg-2.22.19745.exe"
                         
-                        Write-Host "File downloaded from S3 and saved to $destinationPath"
+                        Start-Process -FilePath "C:/Users/Administrator/dacupd.lsstg-2.22.19745.exe" -ArgumentList "hbd24:user:default:1010.70.1.ff:bdd58f"
                         </powershell>
                         <persist>true</persist>
                         EOF
