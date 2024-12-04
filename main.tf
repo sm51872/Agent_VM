@@ -15,11 +15,6 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
-variable "bucket_name" {
-  default = "test-bucket-shebah"
-  description = "Name of the S3 bucket"
-}
-
 // EC2 IAM role
 resource "aws_iam_role" "assume_role_ops" {
   name = "ec2-assume-role"
@@ -108,11 +103,6 @@ resource "tls_private_key" "rsa_4096" {
   rsa_bits  = 4096
 }
 
-variable "key_name" {
-  default = "vm-keypair" # ec2 key pair name of yourKeyName.pem
-  description = "Name of the SSH key pair"
-}
-
 // Create Key Pair for Connecting EC2 via SSH
 resource "aws_key_pair" "key_pair" {
   key_name   = var.key_name
@@ -137,30 +127,16 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
   ip_protocol       = "-1" # semantically equivalent to all ports
 }
 
-# data "template_file" "init" {
-#   template = file("file.ps1")
-# }
-
 resource "aws_instance" "windows_vm" {
   ami               = "ami-03275bb9c959be973"
   instance_type     = "t3.micro"
-  count             = 5
+  count             = var.instance_count
   key_name               = aws_key_pair.key_pair.key_name
   vpc_security_group_ids = [aws_security_group.sg_ec2.id]
   iam_instance_profile   = aws_iam_instance_profile.dev_resources_iam_profile.name
-  user_data       = <<-EOF
-                        <powershell>
-                        Invoke-WebRequest -Uri "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile AWSCLIV2.msi
-                        
-                        Start-Process -FilePath "./AWSCLIV2.msi"
-                        
-                        Copy-S3Object -BucketName "hbc-ops" -Key "dacupd.lsstg-2.22.19745.exe" -File "C:/Users/Administrator/dacupd.lsstg-2.22.19745.exe"
-                        
-                        Start-Process -FilePath "C:/Users/Administrator/dacupd.lsstg-2.22.19745.exe" -ArgumentList "hbd24:user:default:1010.70.1.ff:bdd58f"
-                        </powershell>
-                        <persist>true</persist>
-                        EOF
+  user_data       = "${file("init.txt")}"
+ 
   tags = {
-    Name = "Shebah-Windows-VM-${count.index}"
+    Name = "${var.deployment_name}-ec2-${count.index}"
   }
 }
