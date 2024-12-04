@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "policy_doc" {
     ]
 
     resources = [
-      "arn:aws:ec2:ec2:eu-west-2:${data.aws_caller_identity.current.account_id}:instance/${aws_instance.windows_vm.id}",
+      "arn:aws:ec2:ec2:eu-west-2:${data.aws_caller_identity.current.account_id}:instance/*",
     ]
   }
   
@@ -144,6 +144,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
 resource "aws_instance" "windows_vm" {
   ami               = "ami-03275bb9c959be973"
   instance_type     = "t3.micro"
+  count             = 5
   key_name               = aws_key_pair.key_pair.key_name
   vpc_security_group_ids = [aws_security_group.sg_ec2.id]
   iam_instance_profile   = aws_iam_instance_profile.dev_resources_iam_profile.name
@@ -160,6 +161,6 @@ resource "aws_instance" "windows_vm" {
                         <persist>true</persist>
                         EOF
   tags = {
-    Name = "Shebah-Windows-VM"
+    Name = "Shebah-Windows-VM-${count.index}"
   }
 }
