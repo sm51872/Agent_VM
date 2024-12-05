@@ -16,3 +16,13 @@ variable "instance_count" {
 variable "deployment_name" {
     default = "agent_vm"
 }
+
+variable "installation_hint" {
+  default = "hbd24:user:default:1010.70.1.ff:bdd58f"
+  description = "Installation hint needed to install DAC"
+}
+
+variable "dac_agent" {
+  default = "dacupd.lsstg-2.22.19745.exe"
+  description = "DAC agent"
+}

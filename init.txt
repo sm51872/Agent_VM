@@ -3,8 +3,8 @@ Invoke-WebRequest -Uri "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile AWSC
 
 Start-Process -FilePath "./AWSCLIV2.msi"
 
-Copy-S3Object -BucketName "hbc-ops" -Key "dacupd.lsstg-2.22.19745.exe" -File "C:/Users/Administrator/dacupd.lsstg-2.22.19745.exe"
+Copy-S3Object -BucketName "hbc-ops" -Key "${dac_agent}" -File "C:/Users/Administrator/${dac_agent}"
 
-Start-Process -FilePath "C:/Users/Administrator/dacupd.lsstg-2.22.19745.exe" -ArgumentList "hbd24:user:default:1010.70.1.ff:bdd58f"
+Start-Process -FilePath "C:/Users/Administrator/${dac_agent}" -ArgumentList "${installation_hint}"
 </powershell>
 <persist>true</persist>

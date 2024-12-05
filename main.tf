@@ -134,7 +134,10 @@ resource "aws_instance" "windows_vm" {
   key_name               = aws_key_pair.key_pair.key_name
   vpc_security_group_ids = [aws_security_group.sg_ec2.id]
   iam_instance_profile   = aws_iam_instance_profile.dev_resources_iam_profile.name
-  user_data       = "${file("init.txt")}"
+  user_data       = "${templatefile("init.txt", {
+    dac_agent = var.dac_agent
+    installation_hint = var.installation_hint
+  })}"
  
   tags = {
     Name = "${var.deployment_name}-ec2-${count.index}"
