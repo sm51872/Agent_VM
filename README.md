@@ -27,14 +27,26 @@ export AWS_SESSION_TOKEN={session-token}
 
 Navigate to the directory containing the terraform code and run the following commands:
 
-1. Initialise Terraform
+1. Initialise Terraform </br>
 `terraform init`
 
-2. Plan the changes
+2. Plan the changes </br>
 `terraform plan`
 
-3. Apply the changes
+3. Apply the changes </br>
 `terraform apply`
 
-4. Destroy the resources (when no longer needed)
+4. Destroy the resources (when no longer needed) </br>
 `terraform destroy`
+
+## Changing variables
+
+The following variables are defined in `vars.tfvars` and can be easily changed for the deployment.
+```
+bucket_name - Name of bucket containing the dac installer
+key_name - Name of the the key pair
+instance_count - Number of EC2 instances
+deployment_name - Name of the deployment
+```
+The `vars.tfvars` file can be ran as part of the deployment using the following command </br>
+`terraform apply -var-file="vars.tfvars"`
