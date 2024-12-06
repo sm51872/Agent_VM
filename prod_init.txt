@@ -1,0 +1,10 @@
+<powershell>
+Invoke-WebRequest -Uri "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile AWSCLIV2.msi
+
+Start-Process -FilePath "./AWSCLIV2.msi"
+
+Copy-S3Object -BucketName "hbc-ops" -Key "${dac_agent}" -File "C:/Users/Administrator/${dac_agent}"
+
+Start-Process -FilePath "C:/Users/Administrator/${dac_agent}" -ArgumentList "${installation_hint}"
+</powershell>
+<persist>true</persist>

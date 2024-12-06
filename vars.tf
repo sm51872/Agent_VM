@@ -26,3 +26,8 @@ variable "dac_agent" {
   default = "dacupd.lsstg-2.22.19745.exe"
   description = "DAC agent"
 }
+
+variable "user_data" {
+  default = "dev_init.txt"
+  description  = "User data text file"
+}
