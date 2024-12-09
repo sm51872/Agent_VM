@@ -46,8 +46,8 @@ In the terminal navigate to the directory containing the terraform code and run 
 
 ## Changing variables
 
-Create a `dev_vars.tfvars` or `prod_vars.tfvars` file defining the variables in the `vars.tf` file. </br>
-The following variables are defined in `dev_vars.tfvars` or `prod_vars.tfvars` and can be easily changed for the deployment.
+Create a `ls_stage_vars.tfvars` or `hs_stage_vars.tfvars` file defining the variables in the `vars.tf` file. </br>
+The following variables are defined in `ls_stage_vars.tfvars` or `hs_stage_vars.tfvars` and can be easily changed for the deployment.
 ```
 bucket_name         - Name of bucket containing the dac installer
 key_name            - Name of the the key pair
@@ -56,19 +56,19 @@ deployment_name     - Name of the deployment
 installation_hint   - Installation hint needed to install DAC
 dac_agent           - DAC agent
 ```
-Change the `installation_hint` and `dac_agent` depending on whether it's dev or prod </br>
+Change the `installation_hint` and `dac_agent` depending on whether it's lowside staging or hs staging </br>
 
-### Create the deployment (dev/prod)
-Create a dev agent using the `dev_vars.tfvars` file, run the following commands
+### Create the deployment (ls staging/hs staging)
+Create a dev agent using the `ls_stage_vars.tfvars` file, run the following commands
 ```
-terraform plan -var-file=dev_vars.tfvars -out devtfplan.out
-terraform apply "devtfplan.out"
+terraform plan -var-file=ls_stage_vars.tfvars -out lstfplan.out
+terraform apply "lstfplan.out"
 ```
 
-Create a prod agent using the `prod_vars.tfvars` file, run the following commands
+Create a prod agent using the `ls_stage_vars.tfvars` file, run the following commands
 ```
-terraform plan -var-file=prod_vars.tfvars -out prodtfplan.out
-terraform apply "prodtfplan.out"
+terraform plan -var-file=hs_stage_vars.tfvars -out hstfplan.out
+terraform apply "hstfplan.out"
 ```
 
 ## Accessing the VM via the GUI

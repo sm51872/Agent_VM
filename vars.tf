@@ -28,6 +28,6 @@ variable "dac_agent" {
 }
 
 variable "user_data" {
-  default = "dev_init.txt"
+  default = "ls_stage.txt"
   description  = "User data text file"
 }
