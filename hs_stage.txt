@@ -4,7 +4,34 @@ Invoke-WebRequest -Uri "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile AWSC
 Start-Process -FilePath "./AWSCLIV2.msi"
 
 Copy-S3Object -BucketName "hbc-ops" -Key "${dac_agent}" -File "C:/Users/Administrator/${dac_agent}"
+Copy-S3Object -BucketName "hbc-ops" -Key "config.json" -File "C:/Users/Administrator/config.json"
+Copy-S3Object -BucketName "hbc-ops" -Key "Create-EndpointNoise.ps1" -File "C:/Users/Administrator/Create-EndpointNoise.ps1"
 
 Start-Process -FilePath "C:/Users/Administrator/${dac_agent}" -ArgumentList "${installation_hint}"
+
+function Create-Scheduled {
+    param(
+        [string] $Name,
+        [string] $Script,
+        [int]    $Interval,
+        [string] $RunType
+    )
+
+    # Remove any existing tasks
+    Unregister-ScheduledTask -TaskName $Name -Confirm:$false -ErrorAction 'silentlycontinue'
+
+    # Create a new scheduled task action
+    $action = New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File $Script -Argument $RunType"
+    $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes $Interval)
+    $principal = New-ScheduledTaskPrincipal -UserID "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
+    $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
+    
+    Register-ScheduledTask -TaskName $Name -Action $action -Trigger $trigger -Settings $settings -Principal $principal
+
+    Write-Host "Created scheduled task '$Name' created to run '$Script' every minute."
+}
+
+Create-Scheduled -Name "NoiseRunner" -Script "C:/Users/Administrator/Create-EndpointNoise.ps1" -Interval 1 -RunType "-Run"
+Create-Scheduled -Name "NoiseCleanup" -Script "C:/Users/Administrator/Create-EndpointNoise.ps1" -Interval 60 -RunType "-Cleanup"
 </powershell>
 <persist>true</persist>
