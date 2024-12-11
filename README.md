@@ -72,11 +72,16 @@ terraform apply "hstfplan.out"
 ```
 
 ## Accessing the VM via the GUI
-Once `terraform apply` has been run. Open the AWS console and navigate to `SSM`.
-Naviagate to `fleet manager` (on the left hand menu). 
-Under managed nodes the newly created EC2 will appear (this many take some time, be patient).
-Tick the box for the EC2, and under account management (top left), click on `Connect with Remote desktop`
-Click on `Add connection`, and in the dialog box select the newly created EC2
-Under authentication type, chose `Key pair`, leave the Administrator account name as the default `Administrator`
-Under key pair content, chose `Paste key pair content` and copy the contents from the .pem file created in cloud9.
+Once `terraform apply` has been run. Open the AWS console and navigate to `SSM`. </br>
+Naviagate to `fleet manager` (on the left hand menu). </br>
+Under managed nodes the newly created EC2 will appear (this many take some time, be patient). </br>
+Tick the box for the EC2, and under account management (top left), click on `Connect with Remote desktop` </br>
+Click on `Add connection`, and in the dialog box select the newly created EC2 </br>
+Under authentication type, chose `Key pair`, leave the Administrator account name as the default `Administrator` </br>
+Under key pair content, chose `Paste key pair content` and copy the contents from the .pem file created in cloud9. </br>
 Click connect, to start VM and view GUI
+
+## Pushing to hbc-ops-terraform
+Add and commit as usual </br>
+Push to the hbc-ops-terraform repository </br>
+`git push -u hbc main`
