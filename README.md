@@ -85,3 +85,8 @@ Click connect, to start VM and view GUI
 Add and commit as usual </br>
 Push to the hbc-ops-terraform repository </br>
 `git push -u hbc main`
+
+## Pushing to my personal github
+Add and commit as usual </br>
+Push to the github repository </br>
+`git push origin main`

@@ -4,8 +4,8 @@ Invoke-WebRequest -Uri "https://awscli.amazonaws.com/AWSCLIV2.msi" -OutFile AWSC
 Start-Process -FilePath "./AWSCLIV2.msi"
 
 Copy-S3Object -BucketName "hbc-ops" -Key "${dac_agent}" -File "C:/Users/Administrator/${dac_agent}"
-Copy-S3Object -BucketName "hbc-ops" -Key "config.json" -File "C:/Users/Administrator/config.json"
-Copy-S3Object -BucketName "hbc-ops" -Key "Create-EndpointNoise.ps1" -File "C:/Users/Administrator/Create-EndpointNoise.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ukncsc/hbc-ops-terraform/refs/heads/main/Noise/config.json?token=GHSAT0AAAAAACZ6R3JHCGTORH45T66NWMYSZ2ZTAKA" -OutFile "C:/Users/Administrator/config.json"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ukncsc/hbc-ops-terraform/refs/heads/main/Noise/Create-EndpointNoise.ps1?token=GHSAT0AAAAAACZ6R3JGM3OS7VTL3RBLCDZEZ2ZTAGA" -OutFile "C:/Users/Administrator/Create-EndpointNoise.ps1"
 
 Start-Process -FilePath "C:/Users/Administrator/${dac_agent}" -ArgumentList "${installation_hint}"
 
