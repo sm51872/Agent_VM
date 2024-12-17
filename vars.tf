@@ -31,3 +31,23 @@ variable "user_data" {
   default = "ls_stage.txt"
   description  = "User data text file"
 }
+
+variable "org" {
+  default = "1010"
+  description  = "Target"
+}
+
+variable "subnet" {
+  default = "70"
+  description  = "Target"
+}
+
+variable "defaultID" {
+  default = "1"
+  description  = "Target"
+}
+
+variable "Target" {
+  default = "default"
+  description  = "Target"
+}

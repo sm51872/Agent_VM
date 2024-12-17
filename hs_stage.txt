@@ -7,7 +7,19 @@ Copy-S3Object -BucketName "hbc-ops" -Key "${dac_agent}" -File "C:/Users/Administ
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ukncsc/hbc-ops-terraform/refs/heads/main/Noise/config.json?token=GHSAT0AAAAAACZ6R3JHCGTORH45T66NWMYSZ2ZTAKA" -OutFile "C:/Users/Administrator/config.json"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ukncsc/hbc-ops-terraform/refs/heads/main/Noise/Create-EndpointNoise.ps1?token=GHSAT0AAAAAACZ6R3JGM3OS7VTL3RBLCDZEZ2ZTAGA" -OutFile "C:/Users/Administrator/Create-EndpointNoise.ps1"
 
-Start-Process -FilePath "C:/Users/Administrator/${dac_agent}" -ArgumentList "${installation_hint}"
+$PreToken = "hbd24:user:${Target}:${org}.${subnet}.${defaultID}.ff:"
+
+$stringAsStream = [System.IO.MemoryStream]::new()
+$writer = [System.IO.StreamWriter]::new($stringAsStream)
+$writer.write($PreToken)
+$writer.Flush()
+$stringAsStream.Position = 0
+
+$Hash = (Get-FileHash -InputStream $stringAsStream -Algorithm MD5).Hash.SubString(0,6).ToLower()
+
+$installId = $PreToken + $Hash
+
+Start-Process -FilePath "C:/Users/Administrator/${dac_agent}" -ArgumentList "$installId"
 
 function Create-Scheduled {
     param(

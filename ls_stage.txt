@@ -5,6 +5,18 @@ Start-Process -FilePath "./AWSCLIV2.msi"
 
 Copy-S3Object -BucketName "hbc-ops" -Key "${dac_agent}" -File "C:/Users/Administrator/${dac_agent}"
 
-Start-Process -FilePath "C:/Users/Administrator/${dac_agent}" -ArgumentList "${installation_hint}"
+$PreToken = "hbd24:user:${Target}:${org}.${subnet}.${defaultID}.ff:"
+
+$stringAsStream = [System.IO.MemoryStream]::new()
+$writer = [System.IO.StreamWriter]::new($stringAsStream)
+$writer.write($PreToken)
+$writer.Flush()
+$stringAsStream.Position = 0
+
+$Hash = (Get-FileHash -InputStream $stringAsStream -Algorithm MD5).Hash.SubString(0,6).ToLower()
+
+$installId = $PreToken + $Hash
+
+Start-Process -FilePath "C:/Users/Administrator/${dac_agent}" -ArgumentList "$installId"
 </powershell>
 <persist>true</persist>

@@ -136,7 +136,10 @@ resource "aws_instance" "windows_vm" {
   iam_instance_profile   = aws_iam_instance_profile.dev_resources_iam_profile.name
   user_data       = "${templatefile(var.user_data, {
     dac_agent = var.dac_agent
-    installation_hint = var.installation_hint
+    Target = var.Target
+    org = var.org
+    subnet = var.subnet
+    defaultID = var.defaultID
   })}"
  
   tags = {
