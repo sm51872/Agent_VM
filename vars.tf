@@ -33,21 +33,21 @@ variable "user_data" {
 }
 
 variable "org" {
-  default = "1010"
+  default = "Organisation ID"
   description  = "Target"
 }
 
 variable "subnet" {
   default = "70"
-  description  = "Target"
+  description  = "Organisation group ID"
 }
 
 variable "defaultID" {
   default = "1"
-  description  = "Target"
+  description  = "Default ID"
 }
 
 variable "Target" {
   default = "default"
-  description  = "Target"
+  description  = "HA Install Target"
 }

@@ -48,6 +48,7 @@ In the terminal navigate to the directory containing the terraform code and run 
 
 Create a `ls_stage_vars.tfvars` or `hs_stage_vars.tfvars` file defining the variables in the `vars.tf` file. </br>
 The following variables are defined in `ls_stage_vars.tfvars` or `hs_stage_vars.tfvars` and can be easily changed for the deployment.
+
 ```
 bucket_name         - Name of bucket containing the dac installer
 key_name            - Name of the the key pair
@@ -55,7 +56,13 @@ instance_count      - Number of EC2 instances
 deployment_name     - Name of the deployment
 installation_hint   - Installation hint needed to install DAC
 dac_agent           - DAC agent
+user_data           - Text file with EC2 user data (eg. hs_stage.txt)
+org                 - Organisation ID
+subnet              - Organisation group ID
+defaultID           - Default ID (eg. 1)
+Target              - HA Install Target
 ```
+
 Change the `installation_hint` and `dac_agent` depending on whether it's lowside staging or hs staging </br>
 
 ### Create the deployment (ls staging/hs staging)
