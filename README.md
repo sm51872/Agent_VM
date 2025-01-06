@@ -46,8 +46,7 @@ In the terminal navigate to the directory containing the terraform code and run 
 
 ## Changing variables
 
-Create a `ls_stage_vars.tfvars` or `hs_stage_vars.tfvars` file defining the variables in the `vars.tf` file. </br>
-The following variables are defined in `ls_stage_vars.tfvars` or `hs_stage_vars.tfvars` and can be easily changed for the deployment.
+In the relevant folder eg. lowside_staging, create a `ls_stage_vars.tfvars` or `hs_stage_vars.tfvars` file, using the following variables:
 
 ```
 bucket_name         - Name of bucket containing the dac installer
@@ -56,7 +55,7 @@ instance_count      - Number of EC2 instances
 deployment_name     - Name of the deployment
 installation_hint   - Installation hint needed to install DAC
 dac_agent           - DAC agent
-user_data           - Text file with EC2 user data (eg. hs_stage.txt)
+user_data           - Text file with EC2 user data (eg. highside/hs_stage.txt)
 org                 - Organisation ID
 subnet              - Organisation group ID
 defaultID           - Default ID (eg. 1)
@@ -68,14 +67,14 @@ Change the `installation_hint` and `dac_agent` depending on whether it's lowside
 ### Create the deployment (ls staging/hs staging)
 Create a dev agent using the `ls_stage_vars.tfvars` file, run the following commands
 ```
-terraform plan -var-file=ls_stage_vars.tfvars -out lstfplan.out
-terraform apply "lstfplan.out"
+terraform plan -var-file=lowside_staging/ls_stage_vars.tfvars -out lowside_staging/lstfplan.out
+terraform apply "lowside_staging/lstfplan.out"
 ```
 
-Create a prod agent using the `ls_stage_vars.tfvars` file, run the following commands
+Create a prod agent using the `hs_stage_vars.tfvars` file, run the following commands
 ```
-terraform plan -var-file=hs_stage_vars.tfvars -out hstfplan.out
-terraform apply "hstfplan.out"
+terraform plan -var-file=highside_staging/hs_stage_vars.tfvars -out highside_staging/hstfplan.out
+terraform apply "highside_staging/hstfplan.out"
 ```
 
 ## Accessing the VM via the GUI
@@ -97,3 +96,6 @@ Push to the hbc-ops-terraform repository </br>
 Add and commit as usual </br>
 Push to the github repository </br>
 `git push origin main`
+
+## Notes
+EC2 instances will stop at 7pm and start at 8am, if the terraform is not destroyed.

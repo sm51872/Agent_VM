@@ -17,18 +17,13 @@ variable "deployment_name" {
     default = "agent_vm"
 }
 
-variable "installation_hint" {
-  default = "hbd24:user:default:1010.70.1.ff:bdd58f"
-  description = "Installation hint needed to install DAC"
-}
-
 variable "dac_agent" {
   default = "dacupd.lsstg-2.22.19745.exe"
   description = "DAC agent"
 }
 
 variable "user_data" {
-  default = "ls_stage.txt"
+  default = "lowside_staging/ls_stage.txt"
   description  = "User data text file"
 }
 

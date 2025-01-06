@@ -1,18 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.16"
-    }
-  }
-
-  required_version = ">= 1.2.0"
-}
-
-provider "aws" {
-  region  = "eu-west-2"
-}
-
 data "aws_caller_identity" "current" {}
 
 // EC2 IAM role
@@ -28,6 +13,13 @@ resource "aws_iam_role" "assume_role_ops" {
           Service = "ec2.amazonaws.com"
         },
         Action    = "sts:AssumeRole"
+      },
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = ["scheduler.amazonaws.com"]
+        }
+        Action = "sts:AssumeRole"
       }
     ]
   })
@@ -41,7 +33,7 @@ data "aws_iam_policy_document" "policy_doc" {
     actions = [
       "ec2:DescribeInstances",
       "ec2:DescribeInstanceTypes",
-      "ec2:GetSerialConsoleAccessStatus",
+      "ec2:GetSerialConsoleAccessStatus"
     ]
 
     resources = [
@@ -144,5 +136,73 @@ resource "aws_instance" "windows_vm" {
  
   tags = {
     Name = "${var.deployment_name}-ec2-${count.index}"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "scheduler" {
+  policy_arn = aws_iam_policy.scheduler.arn
+  role       = aws_iam_role.assume_role_ops.name
+}
+
+resource "aws_iam_policy" "scheduler" {
+  name = "cron_scheduler_policy"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        # allow scheduler to execute the task
+        Effect = "Allow",
+        Action = [
+          "ec2:StopInstances",
+          "ec2:StartInstances"
+        ]
+        # trim :<revision> from arn, to point at the whole task definition and not just one revision
+        Resource = ["*",]
+      },
+    ]
+  })
+}
+
+resource "aws_scheduler_schedule" "stop_schedule" {
+  name       = "stop_instances_schedule"
+
+  flexible_time_window {
+    mode = "OFF"
+  }
+
+  schedule_expression = "cron(0 19 ? * * *)"
+
+  count    = var.instance_count
+  
+  target {
+    arn      = "arn:aws:scheduler:::aws-sdk:ec2:stopInstances"
+    role_arn = aws_iam_role.assume_role_ops.arn
+    input    = jsonencode({
+      InstanceIds = [
+        aws_instance.windows_vm[count.index].id
+      ]
+    })
+  }
+}
+
+resource "aws_scheduler_schedule" "start_schedule" {
+  name       = "start_instances_schedule"
+
+  flexible_time_window {
+    mode = "OFF"
+  }
+
+  schedule_expression = "cron(0 8 ? * * *)"
+
+  count    = var.instance_count
+  
+  target {
+    arn      = "arn:aws:scheduler:::aws-sdk:ec2:startInstances"
+    role_arn = aws_iam_role.assume_role_ops.arn
+    input    = jsonencode({
+      InstanceIds = [
+        aws_instance.windows_vm[count.index].id
+      ]
+    })
   }
 }
