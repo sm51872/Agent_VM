@@ -1,5 +1,5 @@
 variable "bucket_name" {
-  default = "test-bucket-shebah"
+  default = "hbc-ops"
   description = "Name of the S3 bucket"
 }
 

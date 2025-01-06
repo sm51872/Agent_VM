@@ -182,6 +182,9 @@ resource "aws_scheduler_schedule" "stop_schedule" {
         aws_instance.windows_vm[count.index].id
       ]
     })
+    retry_policy {
+      maximum_retry_attempts = 3
+    }
   }
 }
 
@@ -204,5 +207,8 @@ resource "aws_scheduler_schedule" "start_schedule" {
         aws_instance.windows_vm[count.index].id
       ]
     })
+    retry_policy {
+      maximum_retry_attempts = 3
+    }
   }
 }
